@@ -172,3 +172,4 @@ run_dnabarcoder <- function(fasta_file, output_prefix, dnabarcoder_path, method)
     return(0.97)
   })
 }
+

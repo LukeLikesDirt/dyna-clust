@@ -251,3 +251,4 @@ extract_taxon_from_id <- function(seq_ids) {
   
   return(taxon)
 }
+

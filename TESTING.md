@@ -140,3 +140,4 @@ print(otu_table)
 
 ### Issue: "Taxonomy file not found"
 **Solution**: Ensure the taxonomy file exists and is tab-separated with columns: seq_id and taxon
+

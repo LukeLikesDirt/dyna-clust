@@ -285,3 +285,4 @@ create_otu_fasta <- function(otu_assignments, asv_sequences, output_dir) {
   writeLines(fasta_lines, output_file)
   message("OTU representative sequences saved to: ", output_file)
 }
+

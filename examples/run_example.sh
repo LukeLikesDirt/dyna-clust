@@ -62,3 +62,4 @@ echo "  2. Classifications: $OUTPUT_DIR/02_classification/asv_classifications.ts
 echo "  3. OTU table: $OUTPUT_DIR/03_clustering/otu_table.tsv"
 echo "  4. OTU representatives: $OUTPUT_DIR/03_clustering/otu_representatives.fasta"
 echo ""
+
