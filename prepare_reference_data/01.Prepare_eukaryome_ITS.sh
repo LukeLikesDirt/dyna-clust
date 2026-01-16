@@ -23,8 +23,8 @@ readonly EXTRACTED_DIR="./data/"
 readonly INPUT_SEQS="./data/General_EUK_ITS_v2.0.fasta"
 readonly REFORMATTED_SEQS="./data/eukaryome_ITS_v2.0.fasta"
 
-# Create ref_seq directory if it doesn't exist
-mkdir -p ./data/ref_seqs
+# Create data directory if it doesn't exist
+mkdir -p ./data
 
 # HELPER SCRIPT: R script for reformatting EUKARYOME headers
 readonly REFORMAT_REFSEQS="helper_scripts/reformat_eukaryome.R"
