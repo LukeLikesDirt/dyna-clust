@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=64
+#SBATCH --cpus-per-task=16
 #SBATCH --time=1-00:00:00
 #SBATCH --partition=day
 #SBATCH --output=slurm/%x.%j.out
@@ -15,13 +15,13 @@
 # =============================================================================
 
 # EUKARYOME PARAMETERS: Download URL (EUKARYOME EUK ITS v.2.0)
-readonly DOWNLOAD_URL="https://sisu.ut.ee/wp-content/uploads/sites/643/General_ITS_v2.0.zip"
-readonly DOWNLOAD_FILE="./data/ref_seqs/General_ITS_v2.0.zip"
-readonly EXTRACTED_DIR="./data/ref_seqs/"
+readonly DOWNLOAD_URL="https://sisu.ut.ee/wp-content/uploads/sites/643/General_EUK_ITS_v2.0.zip"
+readonly DOWNLOAD_FILE="./data/General_EUK_ITS_v2.0.zip"
+readonly EXTRACTED_DIR="./data/"
 
 # FILE PATHS
-readonly INPUT_SEQS="./data/ref_seqs/General_ITS_v2.0.fasta"
-readonly REFORMATTED_SEQS="./data/ref_seqs/eukaryome_ITS_v2.0.fasta"
+readonly INPUT_SEQS="./data/General_EUK_ITS_v2.0.fasta"
+readonly REFORMATTED_SEQS="./data/eukaryome_ITS_v2.0.fasta"
 
 # Create ref_seq directory if it doesn't exist
 mkdir -p ./data/ref_seqs
@@ -47,7 +47,7 @@ if ! curl -o "$DOWNLOAD_FILE" "$DOWNLOAD_URL"; then
 fi
 
 echo "Unzipping downloaded file..."
-if ! unzip -o "$DOWNLOAD_FILE" -d "$EXTRACTED_DIR"; then
+if ! 7z x "$DOWNLOAD_FILE" -o"$EXTRACTED_DIR" -y; then
   echo "ERROR: Failed to unzip $DOWNLOAD_FILE" >&2
   exit 1
 fi
@@ -71,7 +71,7 @@ if [[ ! -f "$REFORMAT_REFSEQS" ]]; then
   exit 1
 fi
 
-if [[ ! -f "$INPUT_SEQS" ]]; then
+if [[ ! -f "$DOWNLOAD_FILE" ]]; then
   echo "ERROR: EUKARYOME file not found: $INPUT_SEQS" >&2
   exit 1
 fi
