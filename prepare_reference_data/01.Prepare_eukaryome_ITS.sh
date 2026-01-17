@@ -32,7 +32,7 @@ readonly REFORMAT_REFSEQS="helper_scripts/reformat_eukaryome.R"
 # Activate conda environment
 echo "Activating conda environment..."
 source ~/.bashrc
-conda activate dynamic_clustering
+conda activate dyna_clust_env
 
 # =============================================================================
 # FILE DOWNLOAD: EUKARYOME
