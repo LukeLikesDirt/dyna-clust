@@ -16,6 +16,7 @@ dependencies:
   - r-biocmanager=1.30.24
   - r-devtools=2.4.5
   - r-seqinr=4.2_36
+  - r-furrr=0.3.1
   - r-jsonlite=1.8.7
   - bioconductor-shortread=1.60.0
   - bioconductor-dada2=1.30.0
