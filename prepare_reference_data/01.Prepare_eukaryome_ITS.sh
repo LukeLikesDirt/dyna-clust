@@ -6,11 +6,11 @@
 #SBATCH --partition=day
 #SBATCH --output=slurm/%x.%j.out
 
-# Script name: preparearyome_its.sh
-# Description: Download and reformat EUKARYOME sequences in preparation for 
-# dnabarcoder predictions, chimera removal and taxanomic assignment.
-
-# This script must be run from the source directory where it is located.
+# Script name:  01.Prepare_eukaryome_ITS.sh
+# Description:  Download and reformat EUKARYOME sequences in preparation for 
+#               dnabarcoder predictions, chimera removal and taxanomic 
+#               assignment.
+# Note:         This script must be run from the source directory.
 
 # =============================================================================
 # PARAMETER SETUP
