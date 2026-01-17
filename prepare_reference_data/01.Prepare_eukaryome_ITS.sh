@@ -21,7 +21,8 @@ readonly EXTRACTED_DIR="./data/"
 
 # FILE PATHS
 readonly INPUT_SEQS="./data/General_EUK_ITS_v2.0.fasta"
-readonly REFORMATTED_SEQS="./data/eukaryome_ITS_v2.0.fasta"
+readonly OUTPUT_SEQS="./data/eukaryome_ITS_v2.0.fasta"
+readonly OUTPUT_CLASSIFICATION="./data/eukaryome_ITS_v2.0.classification"
 
 # Create data directory if it doesn't exist
 mkdir -p ./data
@@ -71,20 +72,20 @@ if [[ ! -f "$REFORMAT_REFSEQS" ]]; then
   exit 1
 fi
 
-if [[ ! -f "$DOWNLOAD_FILE" ]]; then
+if [[ ! -f "$INPUT_SEQS" ]]; then
   echo "ERROR: EUKARYOME file not found: $INPUT_SEQS" >&2
   exit 1
 fi
 
 # Execute R script for reformatting
-#echo "Executing R script for header reformatting and merging..."
-#Rscript "$REFORMAT_REFSEQS" "$INPUT_SEQS" "$REFORMATTED_SEQS"
+echo "Executing R script for header reformatting and merging..."
+Rscript "$REFORMAT_REFSEQS" "$INPUT_SEQS" "$OUTPUT_SEQS" "$OUTPUT_CLASSIFICATION"
 
 # Check if R script executed successfully
-#if [[ $? -ne 0 ]]; then
-#  echo "ERROR: R script execution failed!" >&2
-#  exit 1
-#fi
+if [[ $? -ne 0 ]]; then
+  echo "ERROR: R script execution failed!" >&2
+  exit 1
+fi
 
 echo "Reformatting completed successfully!"
 echo "Reformatted output saved to: $REFORMATTED_SEQS"
