@@ -10,6 +10,8 @@
 # Description: Download and reformat EUKARYOME sequences in preparation for 
 # dnabarcoder predictions, chimera removal and taxanomic assignment.
 
+# This script must be run from the source directory where it is located.
+
 # =============================================================================
 # PARAMETER SETUP
 # =============================================================================
