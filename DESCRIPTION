@@ -1,0 +1,25 @@
+Package: dynaclust
+Type: Package
+Title: Taxon-Specific Dynamic Clustering of OTUs from Metabarcoding Data
+Version: 0.1.0
+Authors@R: person("User", "Name", email = "user@example.com", role = c("aut", "cre"))
+Description: A tool for dynamic clustering of OTUs using taxon-specific clustering 
+    cutoffs computed with dnabarcoder, followed by classification of ASVs using BLAST 
+    and custom clustering algorithms.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Depends:
+    R (>= 4.0.0)
+Imports:
+    dplyr,
+    readr,
+    stringr,
+    purrr,
+    tibble
+Suggests:
+    testthat
+SystemRequirements: 
+    BLAST+ (>= 2.10.0),
+    dnabarcoder (https://github.com/vuthuyduong/dnabarcoder)
+
