@@ -109,11 +109,23 @@ classification_df <- fasta_df %>%
     genus = str_extract(header, "g__([^;]+)") %>% str_remove("g__"),
     species_epithet = str_extract(header, "s__([^;]+)$") %>% str_remove("s__")
   ) %>%
+  # Mutate "-" to "." for consistent use of delimiters
+  mutate(
+    across(c(kingdom, phylum, class, order, family, genus, species_epithet), 
+           ~str_replace_all(.x, "-", "."))
+  ) %>%
   # Replace "unclassified" with "unidentified" across all taxonomic ranks
   mutate(across(c(kingdom, phylum, class, order, family, genus, species_epithet), 
                 ~ifelse(.x == "unclassified", "unidentified", .x))) %>%
-  # Replace EUKARYOME taxon predictions and "Incertae sedis" to "unidentified"
+  # Replace EUKARYOME taxon predictions, "Incertae sedis", and tentative IDs to "unidentified"
   mutate(
+    # Tentative IDs (cf. & nr.), affinities (aff.) and invalidly published names (nov.inval.)
+    species_epithet = ifelse(
+      str_detect(species_epithet, "cf\\.|nr\\.|aff\\.|nov\\.inval\\."), 
+      "unidentified", 
+      species_epithet
+    ),
+    # EUKARYOME predictions and Incertae sedis
     phylum = ifelse(grepl(".phy", phylum), "unidentified", phylum),
     class = ifelse(grepl(".cl", class), "unidentified", class),
     order = ifelse(grepl(".ord", order), "unidentified", order),
@@ -122,14 +134,21 @@ classification_df <- fasta_df %>%
   ) %>%
   # Reformat genus names that contain kingdom name in parentheses
   mutate(
-    genus = ifelse(
-      grepl("\\(", genus),
-      paste0(
-        str_extract(genus, "^[^\\(]+"),               # Genus name before "("
-        "_kng_",
-        str_extract(genus, "(?<=\\()[^\\)]+")         # Kingdom name inside "()"
-      ),
-      genus
+    genus = case_when(
+      # If parentheses exist
+      grepl("\\(", genus) ~ {
+        prefix <- str_extract(genus, "^[^\\(]+")  # Before "("
+        inside <- str_extract(genus, "(?<=\\()[^\\)]+")  # Inside "()"
+        
+        # If there is no prefix, parentheses are a typo and the genus instead of the 
+        # kingdom is inside the parentheses, so remove the parenthesis and keep 
+        # only genus. Otherwise use: prefix_kng_inside
+        ifelse(is.na(prefix) | prefix == "", 
+               inside,
+               paste0(prefix, "_kng_", inside))
+      },
+      # No parentheses - keep as is
+      TRUE ~ genus
     )
   ) %>%
   # Create proper species names (genus + species epithet for identified species)
@@ -210,4 +229,4 @@ cat("   Families unidentified:", sum(classification_df$family == "unidentified")
 cat("   Genera identified:", sum(classification_df$genus != "unidentified"), "\n")
 cat("   Genera unidentified:", sum(classification_df$genus == "unidentified"), "\n\n")
 cat("   Species identified:", sum(classification_df$species != "unidentified"), "\n")
-cat("   Species unidentified:", sum(classification_df$species == "unidentified"), "\n")
+cat("   Species unidentified:", sum(classification_df$species == "unidentified"), "\n\n")

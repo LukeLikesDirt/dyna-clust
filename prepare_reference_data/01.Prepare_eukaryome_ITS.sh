@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=16
+#SBATCH --cpus-per-task=64
 #SBATCH --time=1-00:00:00
 #SBATCH --partition=day
 #SBATCH --output=slurm/%x.%j.out
@@ -89,8 +89,9 @@ if [[ $? -ne 0 ]]; then
   exit 1
 fi
 
-echo "Reformatting completed successfully!"
-echo "Reformatted output saved to: $REFORMATTED_SEQS"
-echo ""
-
 echo "=== PIPELINE COMPLETED SUCCESSFULLY ==="
+echo ""
+echo "Reformatted output saved to:"
+echo " - Sequences: $OUTPUT_SEQS"
+echo " - Classification: $OUTPUT_CLASSIFICATION"
+echo ""
