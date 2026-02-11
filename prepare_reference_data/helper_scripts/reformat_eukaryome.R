@@ -114,53 +114,54 @@ classification_df <- fasta_df %>%
     across(c(kingdom, phylum, class, order, family, genus, species_epithet), 
            ~str_replace_all(.x, "-", "."))
   ) %>%
-  # Replace "unclassified" with "unidentified" across all taxonomic ranks
+  # Replace "unclassified" with "unidentified" across all taxonomic ranks to 
+  # fit DNABARCODER requirements
   mutate(across(c(kingdom, phylum, class, order, family, genus, species_epithet), 
                 ~ifelse(.x == "unclassified", "unidentified", .x))) %>%
   # Replace EUKARYOME taxon predictions, "Incertae sedis", and tentative IDs to "unidentified"
   mutate(
-    # Tentative IDs (cf. & nr.), affinities (aff.) and invalidly published names (nov.inval.)
-    species_epithet = ifelse(
-      str_detect(species_epithet, "cf\\.|nr\\.|aff\\.|nov\\.inval\\."), 
-      "unidentified", 
-      species_epithet
+    # Replace tentative IDs (cf. & nr.), affinities (aff.) and invalidly published names (nov.inval.)
+    # NOTE: I'm also removing anything with ".reg" at ranke the kingdom. I'm not too sure what "reg" is
+    # (potentially clades) and will need to contact Leho to enquire.
+    across(
+      c(kingdom, phylum, class, order, family, genus, species_epithet),
+      ~ifelse(
+        str_detect(.x, "cf\\.|nr\\.|aff\\.|nov\\.inval\\.|\\.reg"),
+        "unidentified", 
+        .x
+      )
     ),
-    # EUKARYOME predictions and Incertae sedis
-    phylum = ifelse(grepl(".phy", phylum), "unidentified", phylum),
-    class = ifelse(grepl(".cl", class), "unidentified", class),
-    order = ifelse(grepl(".ord", order), "unidentified", order),
-    family = ifelse(grepl(".fam", family), "unidentified", family),
-    genus = ifelse(grepl(".gen", genus), "unidentified", genus)
+    # Replace EUKARYOME predictions and Incertae sedis: 
+    phylum = ifelse(grepl("\\.phy", phylum), "unidentified", phylum),
+    class = ifelse(grepl("\\.cl", class), "unidentified", class),
+    order = ifelse(grepl("\\.ord", order), "unidentified", order),
+    family = ifelse(grepl("\\.fam", family), "unidentified", family),
+    genus = ifelse(grepl("\\.gen", genus), "unidentified", genus)
   ) %>%
-  # Reformat genus names that contain kingdom name in parentheses
+  # Reformat names that contain higher taxonomic ranks in parentheses:
+  # Names from higher taxonomic ranks in parentheses delineate taxa names
+  # that are the same in different groups (e.g. same genus names in different 
+  # kingdoms). These need to be reformatted as BLAST does not allow parentheses
+  # in taxon names. Here, we replace parentheses with double underscores so we
+  # can later parse these correctly in DNABARCODER.
   mutate(
-    genus = case_when(
-      # If parentheses exist
-      grepl("\\(", genus) ~ {
-        prefix <- str_extract(genus, "^[^\\(]+")  # Before "("
-        inside <- str_extract(genus, "(?<=\\()[^\\)]+")  # Inside "()"
-        
-        # If there is no prefix, parentheses are a typo and the genus instead of the 
-        # kingdom is inside the parentheses, so remove the parenthesis and keep 
-        # only genus. Otherwise use: prefix_kng_inside
-        ifelse(is.na(prefix) | prefix == "", 
-               inside,
-               paste0(prefix, "_kng_", inside))
-      },
-      # No parentheses - keep as is
-      TRUE ~ genus
+    across(
+      c(phylum, class, order, family, genus),
+      ~case_when(
+        # If parentheses exist, replace with double underscores
+        grepl("\\(", .x) ~ str_replace_all(.x, "\\(", "__") %>%
+                          str_replace_all("\\)", "__"),
+        # No parentheses - keep as is
+        TRUE ~ .x
+      )
     )
   ) %>%
   # Create proper species names (genus + species epithet for identified species)
   mutate(
     species = case_when(
-      species_epithet == "unidentified" ~ "unidentified",
-      is.na(species_epithet) | species_epithet == "" ~ "unidentified",
-      genus == "unidentified" ~ "unidentified",
-      !is.na(genus) & !is.na(species_epithet) & 
-        species_epithet != "unidentified" & genus != "unidentified" ~ 
-        paste(genus, species_epithet, sep = " "),
-      TRUE ~ "unidentified"
+      is.na(species_epithet) | species_epithet == "" | species_epithet == "unidentified" ~ "unidentified",
+      is.na(genus) | genus == "" | genus == "unidentified" ~ "unidentified",
+      TRUE ~ paste(genus, species_epithet, sep = " ")
     )
   ) %>%
   # Calculate taxonomic completeness score
