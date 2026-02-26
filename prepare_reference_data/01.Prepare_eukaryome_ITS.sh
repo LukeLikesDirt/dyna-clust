@@ -30,7 +30,7 @@ readonly OUTPUT_CLASSIFICATION="./data/eukaryome_ITS_v2.0.classification"
 mkdir -p ./data
 
 # HELPER SCRIPT: R script for reformatting EUKARYOME headers
-readonly REFORMAT_REFSEQS="helper_scripts/reformat_eukaryome.R"
+readonly REFORMAT_REFSEQS="./reformat_eukaryome.R"
 
 # Activate conda environment
 echo "Activating conda environment..."
