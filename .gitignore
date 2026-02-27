@@ -23,6 +23,7 @@
 
 # RStudio files
 .Rproj.user/
+*.Rproj
 
 # produced vignettes
 vignettes/*.html
@@ -50,3 +51,21 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# dyna-clust output directories
+examples/output/
+**/01_cutoffs/
+**/02_classification/
+**/03_clustering/
+
+# BLAST database files
+*.nhr
+*.nin
+*.nsq
+*.nsi
+*.nsd
+*.nog
+
+# Temporary files
+/tmp/
+*.tmp

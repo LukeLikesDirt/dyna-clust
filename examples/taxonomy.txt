@@ -1,0 +1,21 @@
+ref_Bacteria_001	Bacteria
+ref_Bacteria_002	Bacteria
+ref_Bacteria_003	Bacteria
+ref_Bacteria_004	Bacteria
+ref_Bacteria_005	Bacteria
+ref_Fungi_001	Fungi
+ref_Fungi_002	Fungi
+ref_Fungi_003	Fungi
+ref_Fungi_004	Fungi
+ref_Fungi_005	Fungi
+ref_Protist_001	Protist
+ref_Protist_002	Protist
+ref_Protist_003	Protist
+ref_Protist_004	Protist
+ref_Protist_005	Protist
+ref_Archaea_001	Archaea
+ref_Archaea_002	Archaea
+ref_Archaea_003	Archaea
+ref_Archaea_004	Archaea
+ref_Archaea_005	Archaea
+
